@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import platform
 
 response = requests.get('https://support.apple.com/en-us/100100')
 try:
@@ -11,8 +12,8 @@ except Exception as exc:
 soup = BeautifulSoup(response.text, 'html.parser')
 latest_versions = soup.find_all(string=re.compile("latest version"))
 version_num_pattern_obj = re.compile(r'(\d{2})(\.\d+)?(\.\d+)?')
-iOS_match_obj = version_num_pattern_obj(latest_versions[0])
-macOS_match_obj = version_num_pattern_obj(latest_versions[1])
+iOS_match_obj = version_num_pattern_obj.search(latest_versions[0])
+macOS_match_obj = version_num_pattern_obj.search(latest_versions[1])
 
 if macOS_match_obj.group() == platform.mac_ver()[0]:
     print("macOS is up to date.")
